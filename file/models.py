@@ -2,7 +2,6 @@ from django.db import models
 from django.core.validators import RegexValidator
 
 
-# Create your models here.
 class BaseMixin(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -37,9 +36,6 @@ class InsurerInfo(BaseMixin):
     INSURER = (("MEL", "ملت"), ("ASI", "آسیا"), ("HEK", "حکمت"))
     insurer_name = models.CharField(max_length=3, choices=INSURER)
     unique_identifier = models.CharField(max_length=20)
-    individual_info = models.OneToOneField(
-        to=IndividualInformation, on_delete=models.CASCADE, related_name="insurer_info"
-    )
 
     def __str__(self) -> str:
         return self.insurer_name
@@ -52,9 +48,6 @@ class InsurerInfo(BaseMixin):
 class PolicyHolderInfo(BaseMixin):
     policy_holder_name = models.CharField(max_length=30)
     unique_identifier = models.CharField(max_length=20)
-    individual_info = models.OneToOneField(
-        to=IndividualInformation, on_delete=models.CASCADE, related_name="policy_holder"
-    )
 
     def __str__(self) -> str:
         return self.policy_holder_name
@@ -65,14 +58,35 @@ class PolicyHolderInfo(BaseMixin):
 
 
 class InsurancePolicy(BaseMixin):
+    """
+    مشخصات بیمه نامه
+    """
+
     from_date = models.DateField()
     to_date = models.DateField()
     verify_date = models.DateField(null=True, blank=True)
     unique_identifier = models.CharField(max_length=20, unique=True)
-    individual_info = models.OneToOneField(
-        to=IndividualInformation,
+    policy_holder_info = models.ForeignKey(
+        to=PolicyHolderInfo,
+        on_delete=models.PROTECT,
+        related_name="holder_insurance_policy",
+    )
+    insurer_info = models.ForeignKey(
+        to=InsurerInfo,
         on_delete=models.CASCADE,
-        related_name="insurance_policy",
+        related_name="insurer_insurance_policy",
+    )
+
+    plan_info = models.OneToOneField(
+        to="file.PlanInfo",
+        related_name="plan_insurance_policy",
+        on_delete=models.PROTECT,
+    )
+
+    individual_information = models.OneToOneField(
+        to=IndividualInformation,
+        related_name="individual_insurance_policy",
+        on_delete=models.CASCADE,
     )
 
     def __str__(self) -> str:
@@ -87,13 +101,10 @@ class PlanInfo(BaseMixin):
     insurance_policy_number = models.CharField(max_length=20)
     plan_name = models.CharField(choices=PLAN, max_length=20)
     unique_identifier = models.CharField(max_length=20)
-    individual_info = models.OneToOneField(
-        to=IndividualInformation, on_delete=models.CASCADE, related_name="plan_info"
-    )
 
     def __str__(self) -> str:
         return f"{self.insurance_policy_number} {self.plan_name}"
 
     class Meta:
         db_table = "plan_info"
-        unique_together = ("plan_name", "unique_identifier")
+        unique_together = ("insurance_policy_number", "unique_identifier")

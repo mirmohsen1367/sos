@@ -30,21 +30,21 @@ class BaseParseData(AbstractParseData):
             data, ["policy_holder_name", "unique_identifier"]
         )
         insurance_policy_data = self.parse_date(
-            data, ["from_date", "to_date", "unique_identifier"]
+            data, ["from_date", "to_date", "unique_identifier", "verify_date"]
         )
         plan_info_data = self.parse_date(
             data, ["insurance_policy_number", "plan_name", "unique_identifier"]
         )
 
-        individual_info_data.update(
+        insurance_policy_data.update(
             {
-                "policy_holder": policy_holder_info_data,
-                "insurance_policy": insurance_policy_data,
+                "individual_information": individual_info_data,
                 "plan_info": plan_info_data,
                 "insurer_info": insurer_info_data,
+                "policy_holder_info": policy_holder_info_data,
             }
         )
-        new_data.update(individual_info_data)
+        new_data.update(insurance_policy_data)
         return new_data
 
 
@@ -59,16 +59,17 @@ class InsurerParseHEKData(BaseParseData):
         "mail": "email",
         "phone": "mobile",
         "nationality": "national_code",
-        "birthdate": "birthdate",
-        "fathername": "father_name",
+        "tavalod": "birthdate",
+        "pedar": "father_name",
         "issueplace": "issue_place",
         "insurer": "insurer_name",
-        "policy_holder_name": "policy_holder_name",
         "id": "unique_identifier",
         "azdate": "from_date",
         "tadate": "to_date",
         "policy_number": "insurance_policy_number",
+        "verifydate": "verify_date",
         "plan": "plan_name",
+        "policy_holder_name": "policy_holder_name",
     }
 
     def parse_date(self, data, list_of_key):
@@ -92,7 +93,7 @@ class InsurerParseHEKData(BaseParseData):
                 "mail",
                 "phone",
                 "nationality",
-                "birthdate",
+                "tavalod",
                 "fathername",
                 "issueplace",
             ],
@@ -100,18 +101,20 @@ class InsurerParseHEKData(BaseParseData):
 
         insurer_info_data = self.parse_date(data, ["insurer", "id"])
         policy_holder_info_data = self.parse_date(data, ["policy_holder_name", "id"])
-        insurance_policy_data = self.parse_date(data, ["azdate", "tadate", "id"])
+        insurance_policy_data = self.parse_date(
+            data, ["azdate", "tadate", "id", "verifydate"]
+        )
         plan_info_data = self.parse_date(data, ["policy_number", "plan", "id"])
 
-        individual_info_data.update(
+        insurance_policy_data.update(
             {
-                "policy_holder": policy_holder_info_data,
-                "insurance_policy": insurance_policy_data,
+                "policy_holder_info": policy_holder_info_data,
+                "individual_information": individual_info_data,
                 "plan_info": plan_info_data,
                 "insurer_info": insurer_info_data,
             }
         )
-        new_data.update(individual_info_data)
+        new_data.update(insurance_policy_data)
         return new_data
 
 
