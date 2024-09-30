@@ -2,11 +2,7 @@ from .interface import AbstractParseData
 
 
 class BaseParseData(AbstractParseData):
-    def parse_date(
-        self,
-        data,
-        list_of_key,
-    ):
+    def parse_date(self, data, list_of_key):
         new_data = {}
         for k, v in data.items():
             if k in list_of_key:
@@ -75,11 +71,7 @@ class InsurerParseHEKData(BaseParseData):
         "plan": "plan_name",
     }
 
-    def parse_date(
-        self,
-        data,
-        list_of_key,
-    ):
+    def parse_date(self, data, list_of_key):
         new_data = {}
         for k, v in data.items():
             try:

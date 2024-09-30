@@ -42,8 +42,12 @@ python manage.py migrate
 ```bash
 pytest
 ```
-#### d) Create new user and login and test api
+#### e) Create new user and login and test api
 
 ```bash
 python manage.py createsuperuser
 ```
+
+#### f) For run on docker
+
+    docker compose up
