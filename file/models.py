@@ -40,7 +40,7 @@ class Insurer(BaseMixin):
     unique_identifier = models.BigIntegerField(unique=True)
 
     def __str__(self) -> str:
-        return self.insurer_name
+        return self.name
 
     class Meta:
         db_table = "insurer_info"
@@ -53,7 +53,7 @@ class PolicyHolderInfo(BaseMixin):
     insurer = models.ForeignKey(to=Insurer, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
-        return self.policy_holder_name
+        return self.name
 
     class Meta:
         db_table = "policy_holder_info"
@@ -82,6 +82,11 @@ class InsurancePolicy(BaseMixin):
         on_delete=models.CASCADE,
     )
 
+    plan_info = models.ForeignKey(to="file.planInfo",
+                                  related_name="plan_info_insurance_policy",
+                                  on_delete=models.PROTECT
+                                  )
+
     def __str__(self) -> str:
         return f"from_date: {self.from_date.strftime('%Y-%m-%d %H:%M:%S')} to_date: {self.to_date.strftime('%Y-%m-%d %H:%M:%S')}"
 
@@ -91,21 +96,26 @@ class InsurancePolicy(BaseMixin):
 
 
 class PlanInfo(BaseMixin):
-    insurance_policy = models.OneToOneField(
-        to=InsurancePolicy, related_name="plan_info", on_delete=models.CASCADE
-    )
     name = models.CharField(max_length=20)
     unique_identifier = models.BigIntegerField(unique=True)
+    insurer = models.ForeignKey(to=Insurer, on_delete=models.CASCADE,
+                                related_name="insurer_plan_info"
+                                )
 
+    
     def __str__(self) -> str:
-        return f"{self.plan_name}"
+        return f"{self.name}"
 
     class Meta:
         db_table = "plan_info"
-        unique_together = ("name", "unique_identifier")
+        unique_together = unique_together = ("name", "unique_identifier", "insurer")
 
 
 class InsuredPerson(BaseMixin):
+    individual_information = models.ForeignKey(to=IndividualInformation,
+                                               on_delete=models.CASCADE,
+                                               related_name="insured_person"
+                                               )
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     email = models.EmailField()

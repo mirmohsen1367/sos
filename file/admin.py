@@ -1,104 +1,124 @@
-# from django.contrib import admin
-# from file.models import InsurancePolicy
+from django.contrib import admin
+from django.db.models.query import QuerySet
+from django.http import HttpRequest
+from .models import (
+    IndividualInformation,
+    InsurancePolicy,
+    Insurer,
+    InsuredPerson,
+    PolicyHolderInfo,
+    PlanInfo,
+)
 
 
-# class InsurancePolicyAdmin(admin.ModelAdmin):
-#     list_display = [
-#         "get_first_name",
-#         "get_last_name",
-#         "get_email",
-#         "get_mobile",
-#         "get_national_code",
-#         "get_insurer_name",
-#         "get_policy_holder",
-#         "get_plan",
-#         "get_insurance_policy_number",
-#         "get_from_date",
-#         "get_to_date",
-#     ]
+class IndividualInformationAdmin(admin.ModelAdmin):
+    list_display = [
+        "first_name",
+        "last_name",
+        "last_name",
+        "email",
+        "mobile",
+        "get_username",
+        "national_code",
+    ]
 
-#     search_fields = [
-#         "individual_information__national_code",
-#         "individual_information__mobile",
-#     ]
+    def get_queryset(self, request: HttpRequest) -> QuerySet:
+        return super().get_queryset(request)
 
-#     def get_first_name(self, obj):
-#         try:
-#             return obj.individual_information.first_name
-#         except AttributeError:
-#             return
+    def get_username(self, obj):
+        return obj.user.username
 
-#     get_first_name.short_description = "first_name"
+    raw_id_fields = ("user",)
+    list_display_links = ("national_code",)
 
-#     def get_last_name(self, obj):
-#         try:
-#             return obj.individual_information.last_name
-#         except AttributeError:
-#             return
-
-#     get_last_name.short_description = "last_name"
-
-#     def get_email(self, obj):
-#         try:
-#             return obj.individual_information.email
-#         except AttributeError:
-#             return
-
-#     get_email.short_description = "email"
-
-#     def get_mobile(self, obj):
-#         try:
-#             return obj.individual_information.mobile
-#         except AttributeError:
-#             return
-
-#     get_mobile.short_description = "mobile"
-
-#     def get_national_code(self, obj):
-#         try:
-#             return obj.individual_information.national_code
-#         except AttributeError:
-#             return
-
-#     def get_insurer_name(self, obj):
-#         try:
-#             return obj.insurer_info.insurer_name
-#         except AttributeError:
-#             return
-
-#     get_insurer_name.short_description = "insurer"
-
-#     def get_policy_holder(self, obj):
-#         try:
-#             return obj.policy_holder_info.policy_holder_name
-#         except AttributeError:
-#             return
-
-#     get_policy_holder.short_description = "policy_holder"
-
-#     def get_plan(self, obj):
-#         try:
-#             return obj.plan_info.get_plan_name_display()
-#         except AttributeError:
-#             return
-
-#     get_plan.short_description = "plan"
-
-#     def get_insurance_policy_number(self, obj):
-#         try:
-#             return obj.plan_info.insurance_policy_number
-#         except AttributeError:
-#             return
-
-#     def get_from_date(self, obj):
-#         return obj.from_date.strftime("%Y-%m-%d")
-
-#     get_from_date.short_description = "from_date"
-
-#     def get_to_date(self, obj):
-#         return obj.to_date.strftime("%Y-%m-%d")
-
-#     get_to_date.short_description = "to_date"
+    get_username.description = "username"
 
 
-# admin.site.register(InsurancePolicy, InsurancePolicyAdmin)
+class InsurerAdmin(admin.ModelAdmin):
+    list_display = ["name", "unique_identifier"]
+    search_fields = ("name",)
+
+
+class PolicyHolderInfoAdmin(admin.ModelAdmin):
+    list_display = ["name", "unique_identifier", "get_insurer"]
+    search_fields = ("name", "insurer__name")
+    raw_id_fields = ("insurer",)
+
+    def get_insurer(self, obj):
+        return obj.insurer.name
+
+    get_insurer.description = "insurer"
+
+
+class PlanInfoAdmin(admin.ModelAdmin):
+    list_display = ["name"]
+    list_display_links = ["name"]
+
+class InsurancePolicyAdmin(admin.ModelAdmin):
+    list_display = [
+        "number",
+        "get_from_date",
+        "get_to_date",
+        "unique_identifier",
+        "get_insurer",
+        "get_policy_holder_info",
+        "get_individual_info",
+        "get_plan_info_admin",
+    ]
+
+    list_display_links = [
+        "get_insurer",
+        "get_policy_holder_info",
+        "get_individual_info",
+    ]
+    raw_id_fields = ("individual_information",)
+    list_filter = ("insurer", )
+
+
+    def get_from_date(self, obj):
+        return self.obj.from_date.strftime("%m/%d/%Y")
+
+    get_from_date.description = "from_date"
+
+    def get_to_date(self, obj):
+        return self.obj.to_date.strftime("%m/%d/%Y")
+
+    get_to_date.description = "to_date"
+
+    def get_insurer(self, obj):
+        return self.obj.insurer.name
+
+    get_insurer.description = "insurer"
+
+    def get_policy_holder_info(self, obj):
+        return self.obj.policy_holder_info.name
+
+    get_policy_holder_info.description = "policy_holder_info"
+
+    def get_individual_info(self, obj):
+        return self.obj.individual_information.national_code
+
+    get_individual_info.description = "individual_info"
+
+    def get_plan_info_admin(self, obj):
+        return self.obj.plan_info.name
+
+class InsuredPersonAdmin(admin.ModelAdmin):
+
+    list_display = ["first_name", "last_name", "get_individual_information"]
+    search_fields = ("individual_information__national_code",)
+    list_display_links = ("get_individual_information",)
+
+
+    def get_individual_information(self, obj):
+        return obj.individual_information.national_code
+    
+    get_individual_information.description = "national_code"
+
+    
+admin.site.register(IndividualInformation, IndividualInformationAdmin)
+admin.site.register(Insurer, InsurerAdmin)
+admin.site.register(PolicyHolderInfo, PolicyHolderInfoAdmin)
+admin.site.register(InsurancePolicy, InsurancePolicyAdmin)
+admin.site.register(InsuredPerson, InsuredPersonAdmin)
+admin.site.register(PlanInfo, PlanInfoAdmin)

@@ -35,6 +35,11 @@ pip install -r requirements.txt
     SETTINGS=
     DEBUG=
     DB=
+    DB_HOST=
+    DB_PORT=
+    DB_NAME=
+    DB_USER=
+    DB_PASSWORD=
 
 
 #### d) Run in development mode.
