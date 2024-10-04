@@ -68,7 +68,7 @@ class InsurancePolicy(BaseMixin):
     unique_identifier = models.BigIntegerField(unique=True)
     policy_holder_info = models.ForeignKey(
         to=PolicyHolderInfo,
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         related_name="holder_insurance_policied",
     )
 
