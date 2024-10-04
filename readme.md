@@ -29,6 +29,18 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+#### c) Set environment variables from .env.sample.
+    SECRET_KEY=
+    ALLOWED_HOSTS=127.0.0.1
+    SETTINGS=
+    DEBUG=
+
+
+#### d) Run in development mode.
+
+    Please set SETTINGS=sos_test.settings.local in the .env file.
+
+    Please create a logs folder in the root directory and set up separate logging for debug, warning, and query messages.
 
 
 #### e) Run Migrations
@@ -37,17 +49,17 @@ pip install -r requirements.txt
 python manage.py migrate
 ```
 
-#### d) Run Test
+#### f) Run Test
 
 ```bash
 pytest
 ```
-#### e) Create new user and login and test api
+#### g) Create new user and login and test api
 
 ```bash
 python manage.py createsuperuser
 ```
 
-#### f) For run on docker
+#### h) For run on docker
 
     docker compose up
