@@ -91,9 +91,9 @@ class InsurancePolicy(BaseMixin):
 
 
 class PlanInfo(BaseMixin):
-    insurance_policy = models.OneToOneField(to=InsurancePolicy, 
-                                            related_name="plan_info", 
-                                            on_delete=models.CASCADE)
+    insurance_policy = models.OneToOneField(
+        to=InsurancePolicy, related_name="plan_info", on_delete=models.CASCADE
+    )
     name = models.CharField(max_length=20)
     unique_identifier = models.BigIntegerField(unique=True)
 
