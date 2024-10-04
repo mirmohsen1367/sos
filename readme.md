@@ -34,6 +34,7 @@ pip install -r requirements.txt
     ALLOWED_HOSTS=127.0.0.1
     SETTINGS=
     DEBUG=
+    DB=
 
 
 #### d) Run in development mode.

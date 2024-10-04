@@ -81,12 +81,48 @@ WSGI_APPLICATION = "sos_test.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
+
+db = config("DB", default="sqlite", cast=str)
+
+match db:
+    case "postgres":
+        DATABASES = {
+            "default": {
+                "ENGINE": "django.db.backends.postgresql",
+                "HOST": config("DB_HOST", default="localhost", cast=str),
+                "PORT": config("DB_PORT", default="5432", cast=str),
+                "NAME": config("DB_NAME", "sos", cast=str),
+                "USER": config("DB_USER", "postgres", cast=str),
+                "PASSWORD": config("DB_PASSWORD", "", cast=str),
+            }
+        }
+
+    case "mysql":
+        DATABASES = {
+            "default": {
+                "ENGINE": "django.db.backends.mysql",
+                "HOST": config("DB_HOST", default="localhost", cast=str),
+                "PORT": config("DB_PORT", default="3306", cast=str),
+                "NAME": config("DB_NAME", "sos", cast="str"),
+                "USER": config("DB_USER", "root", cast=str),
+                "PASSWORD": config("DB_PASSWORD", "", cast=str),
+            }
+        }
+
+    case "sqlite":
+        DATABASES = {
+            "default": {
+                "ENGINE": "django.db.backends.sqlite3",
+                "NAME": BASE_DIR / "db.sqlite3",
+            }
+        }
+    case _:
+        DATABASES = {
+            "default": {
+                "ENGINE": "django.db.backends.sqlite3",
+                "NAME": BASE_DIR / "db.sqlite3",
+            }
+        }
 
 
 # Password validation
