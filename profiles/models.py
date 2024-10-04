@@ -14,9 +14,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     updated = models.DateTimeField(auto_now=True)
 
     USERNAME_FIELD = "username"
-    REQUIRED_FIELDS = [
-        "phone_number",
-    ]
 
     objects = CustomUserManager()
 
