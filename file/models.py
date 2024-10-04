@@ -36,20 +36,20 @@ class IndividualInformation(BaseMixin):
 
 
 class Insurer(BaseMixin):
-    name = models.CharField(max_length=3)
-    unique_identifier = models.BigIntegerField(unique=True)
+    insurer_name = models.CharField(max_length=3)
+    insurer_unique_identifier = models.BigIntegerField(unique=True)
 
     def __str__(self) -> str:
         return self.name
 
     class Meta:
         db_table = "insurer_info"
-        unique_together = ("name", "unique_identifier")
+        unique_together = ("insurer_name", "insurer_unique_identifier")
 
 
 class PolicyHolderInfo(BaseMixin):
-    name = models.CharField(max_length=30)
-    unique_identifier = models.BigIntegerField(unique=True)
+    policy_holder_name = models.CharField(max_length=30)
+    policy_holder_unique_identifier = models.BigIntegerField(unique=True)
     insurer = models.ForeignKey(to=Insurer, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
@@ -57,15 +57,15 @@ class PolicyHolderInfo(BaseMixin):
 
     class Meta:
         db_table = "policy_holder_info"
-        unique_together = ("name", "unique_identifier", "insurer")
+        unique_together = ("policy_holder_name", "policy_holder_unique_identifier", "insurer")
 
 
 class InsurancePolicy(BaseMixin):
-    number = models.CharField(max_length=20)
+    insurance_policy_number = models.CharField(max_length=20)
     from_date = models.DateField()
     to_date = models.DateField()
     verify_date = models.DateField(null=True, blank=True)
-    unique_identifier = models.BigIntegerField(unique=True)
+    insurance_policy_unique_identifier = models.BigIntegerField(unique=True)
     policy_holder_info = models.ForeignKey(
         to=PolicyHolderInfo,
         on_delete=models.CASCADE,
@@ -93,12 +93,12 @@ class InsurancePolicy(BaseMixin):
 
     class Meta:
         db_table = "insurance_policy"
-        unique_together = ("number", "unique_identifier", "insurer")
+        unique_together = ("insurance_policy_number", "insurance_policy_unique_identifier", "insurer")
 
 
 class PlanInfo(BaseMixin):
-    name = models.CharField(max_length=20)
-    unique_identifier = models.BigIntegerField(unique=True)
+    plan_info_name = models.CharField(max_length=20)
+    planinfo_unique_identifier = models.BigIntegerField(unique=True)
     insurer = models.ForeignKey(
         to=Insurer, on_delete=models.CASCADE, related_name="insurer_plan_info"
     )
@@ -108,7 +108,7 @@ class PlanInfo(BaseMixin):
 
     class Meta:
         db_table = "plan_info"
-        unique_together = unique_together = ("name", "unique_identifier", "insurer")
+        unique_together = unique_together = ("plan_info_name", "planinfo_unique_identifier", "insurer")
 
 
 class InsuredPerson(BaseMixin):

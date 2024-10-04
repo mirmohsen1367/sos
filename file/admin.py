@@ -35,13 +35,13 @@ class IndividualInformationAdmin(admin.ModelAdmin):
 
 
 class InsurerAdmin(admin.ModelAdmin):
-    list_display = ["name", "unique_identifier"]
-    search_fields = ("name",)
+    list_display = ["insurer_name", "insurer_unique_identifier"]
+    search_fields = ("insurer_name",)
 
 
 class PolicyHolderInfoAdmin(admin.ModelAdmin):
-    list_display = ["name", "unique_identifier", "get_insurer"]
-    search_fields = ("name", "insurer__name")
+    list_display = ["policy_holder_name", "policy_holder_unique_identifier", "get_insurer"]
+    search_fields = ("policy_holder_name", "insurer__name")
     raw_id_fields = ("insurer",)
 
     def get_insurer(self, obj):
@@ -51,16 +51,16 @@ class PolicyHolderInfoAdmin(admin.ModelAdmin):
 
 
 class PlanInfoAdmin(admin.ModelAdmin):
-    list_display = ["name"]
-    list_display_links = ["name"]
+    list_display = ["plan_info_name"]
+    list_display_links = ["plan_info_name"]
 
 
 class InsurancePolicyAdmin(admin.ModelAdmin):
     list_display = [
-        "number",
+        "insurance_policy_number",
         "get_from_date",
         "get_to_date",
-        "unique_identifier",
+        "insurance_policy_unique_identifier",
         "get_insurer",
         "get_policy_holder_info",
         "get_individual_info",
@@ -69,7 +69,7 @@ class InsurancePolicyAdmin(admin.ModelAdmin):
 
     list_display_links = [
         "get_insurer",
-        "get_policy_holder_info",
+        "insurance_policy_unique_identifier",
         "get_individual_info",
     ]
     raw_id_fields = ("individual_information",)

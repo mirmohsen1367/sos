@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "api.apps.ApiConfig",
     "file.apps.FileConfig",
     "profiles.apps.ProfilesConfig",
+    "rest_framework.authtoken"
 ]
 
 MIDDLEWARE = [
@@ -169,6 +170,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
+        'rest_framework.authentication.TokenAuthentication', 
     )
 }
 
