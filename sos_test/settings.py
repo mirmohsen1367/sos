@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "api.apps.ApiConfig",
     "file.apps.FileConfig",
+    "profiles.apps.ProfilesConfig",
 ]
 
 MIDDLEWARE = [
@@ -138,3 +139,5 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=5),
     "AUTH_HEADER_TYPES": ("jwt",),
 }
+
+AUTH_USER_MODEL = "profiles.customuser"
