@@ -131,3 +131,6 @@ GitHub.sublime-settings
 
 # Visual Studio Code #
 .vscode/
+logs/
+logs
+logs/*

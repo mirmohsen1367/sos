@@ -14,4 +14,4 @@ exclude =
     tools/xenserver*,
     releasenotes,
     profiles/serializers/__init__.py
-    base/apps.py
+    *settings/*
