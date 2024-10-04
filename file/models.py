@@ -82,10 +82,11 @@ class InsurancePolicy(BaseMixin):
         on_delete=models.CASCADE,
     )
 
-    plan_info = models.ForeignKey(to="file.planInfo",
-                                  related_name="plan_info_insurance_policy",
-                                  on_delete=models.PROTECT
-                                  )
+    plan_info = models.ForeignKey(
+        to="file.planInfo",
+        related_name="plan_info_insurance_policy",
+        on_delete=models.PROTECT,
+    )
 
     def __str__(self) -> str:
         return f"from_date: {self.from_date.strftime('%Y-%m-%d %H:%M:%S')} to_date: {self.to_date.strftime('%Y-%m-%d %H:%M:%S')}"
@@ -98,11 +99,10 @@ class InsurancePolicy(BaseMixin):
 class PlanInfo(BaseMixin):
     name = models.CharField(max_length=20)
     unique_identifier = models.BigIntegerField(unique=True)
-    insurer = models.ForeignKey(to=Insurer, on_delete=models.CASCADE,
-                                related_name="insurer_plan_info"
-                                )
+    insurer = models.ForeignKey(
+        to=Insurer, on_delete=models.CASCADE, related_name="insurer_plan_info"
+    )
 
-    
     def __str__(self) -> str:
         return f"{self.name}"
 
@@ -112,10 +112,11 @@ class PlanInfo(BaseMixin):
 
 
 class InsuredPerson(BaseMixin):
-    individual_information = models.ForeignKey(to=IndividualInformation,
-                                               on_delete=models.CASCADE,
-                                               related_name="insured_person"
-                                               )
+    individual_information = models.ForeignKey(
+        to=IndividualInformation,
+        on_delete=models.CASCADE,
+        related_name="insured_person",
+    )
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     email = models.EmailField()

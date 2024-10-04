@@ -54,6 +54,7 @@ class PlanInfoAdmin(admin.ModelAdmin):
     list_display = ["name"]
     list_display_links = ["name"]
 
+
 class InsurancePolicyAdmin(admin.ModelAdmin):
     list_display = [
         "number",
@@ -72,8 +73,7 @@ class InsurancePolicyAdmin(admin.ModelAdmin):
         "get_individual_info",
     ]
     raw_id_fields = ("individual_information",)
-    list_filter = ("insurer", )
-
+    list_filter = ("insurer",)
 
     def get_from_date(self, obj):
         return self.obj.from_date.strftime("%m/%d/%Y")
@@ -103,19 +103,18 @@ class InsurancePolicyAdmin(admin.ModelAdmin):
     def get_plan_info_admin(self, obj):
         return self.obj.plan_info.name
 
-class InsuredPersonAdmin(admin.ModelAdmin):
 
+class InsuredPersonAdmin(admin.ModelAdmin):
     list_display = ["first_name", "last_name", "get_individual_information"]
     search_fields = ("individual_information__national_code",)
     list_display_links = ("get_individual_information",)
 
-
     def get_individual_information(self, obj):
         return obj.individual_information.national_code
-    
+
     get_individual_information.description = "national_code"
 
-    
+
 admin.site.register(IndividualInformation, IndividualInformationAdmin)
 admin.site.register(Insurer, InsurerAdmin)
 admin.site.register(PolicyHolderInfo, PolicyHolderInfoAdmin)
