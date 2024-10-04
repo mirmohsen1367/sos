@@ -20,5 +20,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     objects = CustomUserManager()
 
+    class Meta:
+        db_table = "customuser"
+
     def __str__(self):
-        return self.phone_number + " " + self.username
+        return self.username
