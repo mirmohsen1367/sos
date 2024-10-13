@@ -40,7 +40,11 @@ class InsurerAdmin(admin.ModelAdmin):
 
 
 class PolicyHolderInfoAdmin(admin.ModelAdmin):
-    list_display = ["policy_holder_name", "policy_holder_unique_identifier", "get_insurer"]
+    list_display = [
+        "policy_holder_name",
+        "policy_holder_unique_identifier",
+        "get_insurer",
+    ]
     search_fields = ("policy_holder_name", "insurer__name")
     raw_id_fields = ("insurer",)
 
